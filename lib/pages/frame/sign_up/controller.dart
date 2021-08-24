@@ -38,18 +38,18 @@ class SignUpController extends GetxController {
 
   // 执行注册操作
   handleSignUp() async {
-    // if (!duCheckStringLength(fullnameController.value.text, 5)) {
-    //   toastInfo(msg: '用户名不能小于5位');
-    //   return;
-    // }
-    // if (!duIsEmail(emailController.value.text)) {
-    //   toastInfo(msg: '请正确输入邮件');
-    //   return;
-    // }
-    // if (!duCheckStringLength(passController.value.text, 6)) {
-    //   toastInfo(msg: '密码不能小于6位');
-    //   return;
-    // }
+    if (!duCheckStringLength(fullnameController.value.text, 5)) {
+      toastInfo(msg: '用户名不能小于5位');
+      return;
+    }
+    if (!duIsEmail(emailController.value.text)) {
+      toastInfo(msg: '请正确输入邮件');
+      return;
+    }
+    if (!duCheckStringLength(passController.value.text, 6)) {
+      toastInfo(msg: '密码不能小于6位');
+      return;
+    }
 
     UserRegisterRequestEntity params = UserRegisterRequestEntity(
       email: emailController.value.text,

@@ -34,6 +34,9 @@ dependencies:
   #     url: git://github.com/tianketianke/_shared.git
   #     ref: main
 
+  # 自定义导航栏
+  animated_bottom_navigation_bar: ^0.3.2
+
   # GetX
   get: ^4.1.4
 

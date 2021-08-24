@@ -1,3 +1,4 @@
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:kuro_sago/common/values/values.dart';
 import 'package:kuro_sago/common/widgets/widgets.dart';
@@ -47,25 +48,31 @@ class ApplicationPage extends GetView<ApplicationController> {
     );
   }
 
-  // 底部导航
-  Widget _buildBottomNavigationBar() {
-    return Obx(() => BottomNavigationBar(
-          items: controller.bottomTabs,
-          currentIndex: controller.state.page,
-          // fixedColor: AppColors.primaryElement,
-          type: BottomNavigationBarType.fixed,
-          onTap: controller.handleNavBarTap,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-        ));
-  }
-
   @override
   Widget build(BuildContext context) {
+    final iconList = <IconData>[
+      Icons.brightness_5,
+      Icons.brightness_4,
+      Icons.brightness_6,
+      Icons.brightness_7,
+    ];
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildPageView(),
-      bottomNavigationBar: _buildBottomNavigationBar(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => {},
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: AnimatedBottomNavigationBar(
+        icons: iconList,
+        activeIndex: controller.state.page,
+        gapLocation: GapLocation.center,
+        notchSmoothness: NotchSmoothness.smoothEdge,
+        leftCornerRadius: 16,
+        rightCornerRadius: 16,
+        onTap: (index) => {controller.handleNavBarTap(index)},
+        //other params
+      ),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kuro_sago/common/entities/entities.dart';
 import 'package:kuro_sago/common/utils/utils.dart';
 import 'package:kuro_sago/common/values/values.dart';
@@ -72,11 +73,11 @@ class Global {
     }
 
     // android 状态栏为透明的沉浸
-    // if (Platform.isAndroid) {
-    //   SystemUiOverlayStyle systemUiOverlayStyle =
-    //       SystemUiOverlayStyle(statusBarColor: Colors.transparent);
-    //   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
-    // }
+    if (Platform.isAndroid) {
+      SystemUiOverlayStyle systemUiOverlayStyle =
+          SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+      SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+    }
   }
 
   // 保存用户已打开APP
