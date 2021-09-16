@@ -50,7 +50,7 @@ class WelcomePage extends GetView<WelcomeController> {
       body: Center(
         child: Column(
           children: <Widget>[
-            Spacer(),
+            // Spacer(),
             _buildStartButton(context),
           ],
         ),
