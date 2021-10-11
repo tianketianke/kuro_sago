@@ -5,37 +5,58 @@ import 'package:kuro_sago/pages/main/index.dart';
 import 'package:get/get.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:kuro_sago/common/widgets/navBar/src/custome_navigation_bar.dart';
 // import 'package:kuro_sago/common/widgets/navBar/src/custom_navigation_bar_item.dart';
-// import 'package:kuro_sago/common/values/values.dart';
-// import 'package:kuro_sago/common/widgets/widgets.dart';
+import 'package:kuro_sago/common/values/values.dart';
+import 'package:kuro_sago/common/widgets/widgets.dart';
 
 import 'index.dart';
 
+import 'dart:ui';
+
+class BlurUtils extends StatelessWidget {
+  Widget child;
+  double singl;
+  BlurUtils({Key? key, required this.child, required this.singl})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: singl, sigmaY: singl),
+      child: Container(
+        color: Colors.white10,
+        child: child,
+      ),
+    );
+  }
+}
+
 class ApplicationPage extends GetView<ApplicationController> {
   // 顶部导航
-  // AppBar _buildAppBar() {
-  //   return transparentAppBar(
-  //       title: Obx(() => Text(
-  //             controller.tabTitles[controller.state.page],
-  //             style: TextStyle(
-  //               color: AppColors.primaryText,
-  //               fontFamily: 'Montserrat',
-  //               fontSize: 18.sp,
-  //               fontWeight: FontWeight.w600,
-  //             ),
-  //           )),
-  //       actions: <Widget>[
-  //         IconButton(
-  //           icon: Icon(
-  //             Icons.search,
-  //             color: AppColors.primaryText,
-  //           ),
-  //           onPressed: () {},
-  //         )
-  //       ]);
-  // }
+  AppBar _buildAppBar() {
+    return transparentAppBar(
+        title: Obx(() => Text(
+              controller.tabTitles[controller.state.page],
+              style: TextStyle(
+                color: AppColors.primaryText,
+                fontFamily: 'Montserrat',
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            )),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.search,
+              color: AppColors.primaryText,
+            ),
+            onPressed: () {},
+          )
+        ]);
+  }
 
   // 内容页
   Widget _buildPageView() {
@@ -55,14 +76,15 @@ class ApplicationPage extends GetView<ApplicationController> {
   @override
   Widget build(BuildContext context) {
     BorderRadiusGeometry radius = BorderRadius.only(
-      topLeft: Radius.circular(24.0),
-      topRight: Radius.circular(24.0),
-      bottomLeft: Radius.circular(24.0),
-      bottomRight: Radius.circular(24.0),
+      topLeft: Radius.circular(24.0.sp),
+      topRight: Radius.circular(24.0.sp),
+      bottomLeft: Radius.circular(24.0.sp),
+      bottomRight: Radius.circular(24.0.sp),
     );
 
     // 面板内容
-    Widget _floatingPanel() {
+    // 总高度 == height = 5 + margin = 5 * 2 = 15
+    Widget _panel() {
       return Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -72,17 +94,18 @@ class ApplicationPage extends GetView<ApplicationController> {
         child: Column(
           children: [
             Container(
-              margin: const EdgeInsets.all(10.0),
+              margin: const EdgeInsets.fromLTRB(0, 5.0, 0, 5.0),
               width: 30,
               height: 5,
               decoration: BoxDecoration(
                   color: Colors.grey[300],
                   borderRadius: BorderRadius.all(Radius.circular(12.0))),
             ),
-            Container(
-              color: Colors.red,
-              child: Text('hahahah'),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: BlurUtils(child: Text('hahahah'), singl: 20),
             )
+            // BlurUtils(child: Text('hahahah'), singl: 20),
           ],
         ),
       );
@@ -110,19 +133,17 @@ class ApplicationPage extends GetView<ApplicationController> {
       // body: _buildPageView(),
       extendBody: true, // 这个属性是决定body的延伸到底部还是延伸到bottomnavigationbar
       body: SlidingUpPanel(
-        minHeight: 80, // 最小高度
-        // maxHeight: 1000 , // 完全体高度
+        minHeight: 85, // 最小高度
+        // maxHeight: 1.sh, // 完全体高度
         backdropEnabled: true, // 遮罩层
         // backdropColor: Colors.red, // 遮罩层颜色
-        // renderPanelSheet: false,
+        renderPanelSheet: false,
         // parallaxOffset: 1.0, // 偏移量
         // isDraggable: true, // 是否可拖动
         // collapsed: _floatingCollapsed(),
-        panel: _floatingPanel(),
+        panel: _panel(),
         body: Scaffold(
-          appBar: AppBar(
-            title: Text("SlidingUpPanelExample"),
-          ),
+          appBar: _buildAppBar(),
           body: Center(
             child: _buildPageView(),
           ),
