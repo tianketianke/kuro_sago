@@ -15,25 +15,6 @@ import 'index.dart';
 
 import 'dart:ui';
 
-class BlurUtils extends StatelessWidget {
-  Widget child;
-  double singl;
-  BlurUtils({Key? key, required this.child, required this.singl})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: singl, sigmaY: singl),
-      child: Container(
-        color: Colors.white10,
-        child: child,
-      ),
-    );
-  }
-}
-
 class ApplicationPage extends GetView<ApplicationController> {
   // 顶部导航
   AppBar _buildAppBar() {
@@ -73,53 +54,63 @@ class ApplicationPage extends GetView<ApplicationController> {
     );
   }
 
+  // 高斯层
+  Widget _buildBlurUtils(Widget child, double singl) {
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: singl, sigmaY: singl),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.black45,
+          // borderRadius: BorderRadius.all(Radius.circular(0))
+        ),
+        child: SafeArea(
+          child: child,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    BorderRadiusGeometry radius = BorderRadius.only(
-      topLeft: Radius.circular(24.0.sp),
-      topRight: Radius.circular(24.0.sp),
-      bottomLeft: Radius.circular(24.0.sp),
-      bottomRight: Radius.circular(24.0.sp),
-    );
+    // BorderRadiusGeometry radius = BorderRadius.only(
+    //   topLeft: Radius.circular(24.0),
+    //   topRight: Radius.circular(24.0),
+    //   bottomLeft: Radius.circular(24.0),
+    //   bottomRight: Radius.circular(24.0),
+    // );
 
     // 面板内容
     // 总高度 == height = 5 + margin = 5 * 2 = 15
     Widget _panel() {
-      return Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: radius,
-        ),
-        // margin: const EdgeInsets.all(24.0),
-        child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.fromLTRB(0, 5.0, 0, 5.0),
-              width: 30,
-              height: 5,
-              decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.all(Radius.circular(12.0))),
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: _buildBlurUtils(
+            Column(
+              children: [
+                Container(
+                  // margin: const EdgeInsets.fromLTRB(0, 5.0, 0, 5.0),
+                  width: 30.w,
+                  height: 5.h,
+                  decoration: BoxDecoration(
+                      color: Colors.yellow,
+                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                ),
+                Text(
+                  'data',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
             ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: BlurUtils(child: Text('hahahah'), singl: 20),
-            )
-            // BlurUtils(child: Text('hahahah'), singl: 20),
-          ],
-        ),
+            6.18),
       );
     }
 
     // 漏出来的部分
-    Widget _floatingCollapsed() {
-      return Container(
-        decoration: BoxDecoration(
-          color: Colors.blueGrey,
-          borderRadius: radius,
-        ),
-        // margin: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
-        child: Center(
+    Widget _collapsed() {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Container(
+          color: Colors.white,
           child: Text(
             "This is the collapsed Widget",
             style: TextStyle(color: Colors.white),
@@ -131,24 +122,22 @@ class ApplicationPage extends GetView<ApplicationController> {
     return Scaffold(
       // appBar: _buildAppBar(),
       // body: _buildPageView(),
-      extendBody: true, // 这个属性是决定body的延伸到底部还是延伸到bottomnavigationbar
+      // extendBody: true, // 这个属性是决定body的延伸到底部还是延伸到bottomnavigationbar
       body: SlidingUpPanel(
-        minHeight: 85, // 最小高度
-        // maxHeight: 1.sh, // 完全体高度
-        backdropEnabled: true, // 遮罩层
+        minHeight: 60.h, // 最小高度
+        maxHeight: 1.sh, // 完全体高度
+        // backdropEnabled: true, // 遮罩层
         // backdropColor: Colors.red, // 遮罩层颜色
         renderPanelSheet: false,
         // parallaxOffset: 1.0, // 偏移量
         // isDraggable: true, // 是否可拖动
-        // collapsed: _floatingCollapsed(),
+        collapsed: _collapsed(),
         panel: _panel(),
         body: Scaffold(
           appBar: _buildAppBar(),
-          body: Center(
-            child: _buildPageView(),
-          ),
+          body: _buildPageView(),
         ),
-        borderRadius: radius,
+        // borderRadius: radius,
         // margin: const EdgeInsets.all(24.0),
       ),
 
