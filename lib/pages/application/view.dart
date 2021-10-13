@@ -5,37 +5,39 @@ import 'package:kuro_sago/pages/main/index.dart';
 import 'package:get/get.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:kuro_sago/common/widgets/navBar/src/custome_navigation_bar.dart';
 // import 'package:kuro_sago/common/widgets/navBar/src/custom_navigation_bar_item.dart';
-// import 'package:kuro_sago/common/values/values.dart';
-// import 'package:kuro_sago/common/widgets/widgets.dart';
+import 'package:kuro_sago/common/values/values.dart';
+import 'package:kuro_sago/common/widgets/widgets.dart';
 
 import 'index.dart';
 
+import 'dart:ui';
+
 class ApplicationPage extends GetView<ApplicationController> {
   // 顶部导航
-  // AppBar _buildAppBar() {
-  //   return transparentAppBar(
-  //       title: Obx(() => Text(
-  //             controller.tabTitles[controller.state.page],
-  //             style: TextStyle(
-  //               color: AppColors.primaryText,
-  //               fontFamily: 'Montserrat',
-  //               fontSize: 18.sp,
-  //               fontWeight: FontWeight.w600,
-  //             ),
-  //           )),
-  //       actions: <Widget>[
-  //         IconButton(
-  //           icon: Icon(
-  //             Icons.search,
-  //             color: AppColors.primaryText,
-  //           ),
-  //           onPressed: () {},
-  //         )
-  //       ]);
-  // }
+  AppBar _buildAppBar() {
+    return transparentAppBar(
+        title: Obx(() => Text(
+              controller.tabTitles[controller.state.page],
+              style: TextStyle(
+                color: AppColors.primaryText,
+                fontFamily: 'Montserrat',
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            )),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.search,
+              color: AppColors.primaryText,
+            ),
+            onPressed: () {},
+          )
+        ]);
+  }
 
   // 内容页
   Widget _buildPageView() {
@@ -52,51 +54,63 @@ class ApplicationPage extends GetView<ApplicationController> {
     );
   }
 
+  // 高斯层
+  Widget _buildBlurUtils(Widget child, double singl) {
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: singl, sigmaY: singl),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.black45,
+          // borderRadius: BorderRadius.all(Radius.circular(0))
+        ),
+        child: SafeArea(
+          child: child,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    BorderRadiusGeometry radius = BorderRadius.only(
-      topLeft: Radius.circular(24.0),
-      topRight: Radius.circular(24.0),
-      bottomLeft: Radius.circular(24.0),
-      bottomRight: Radius.circular(24.0),
-    );
+    // BorderRadiusGeometry radius = BorderRadius.only(
+    //   topLeft: Radius.circular(24.0),
+    //   topRight: Radius.circular(24.0),
+    //   bottomLeft: Radius.circular(24.0),
+    //   bottomRight: Radius.circular(24.0),
+    // );
 
     // 面板内容
-    Widget _floatingPanel() {
-      return Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: radius,
-        ),
-        // margin: const EdgeInsets.all(24.0),
-        child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.all(10.0),
-              width: 30,
-              height: 5,
-              decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.all(Radius.circular(12.0))),
+    // 总高度 == height = 5 + margin = 5 * 2 = 15
+    Widget _panel() {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: _buildBlurUtils(
+            Column(
+              children: [
+                Container(
+                  // margin: const EdgeInsets.fromLTRB(0, 5.0, 0, 5.0),
+                  width: 30.w,
+                  height: 5.h,
+                  decoration: BoxDecoration(
+                      color: Colors.yellow,
+                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                ),
+                Text(
+                  'data',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
             ),
-            Container(
-              color: Colors.red,
-              child: Text('hahahah'),
-            )
-          ],
-        ),
+            6.18),
       );
     }
 
     // 漏出来的部分
-    Widget _floatingCollapsed() {
-      return Container(
-        decoration: BoxDecoration(
-          color: Colors.blueGrey,
-          borderRadius: radius,
-        ),
-        // margin: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
-        child: Center(
+    Widget _collapsed() {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Container(
+          color: Colors.white,
           child: Text(
             "This is the collapsed Widget",
             style: TextStyle(color: Colors.white),
@@ -108,26 +122,22 @@ class ApplicationPage extends GetView<ApplicationController> {
     return Scaffold(
       // appBar: _buildAppBar(),
       // body: _buildPageView(),
-      extendBody: true, // 这个属性是决定body的延伸到底部还是延伸到bottomnavigationbar
+      // extendBody: true, // 这个属性是决定body的延伸到底部还是延伸到bottomnavigationbar
       body: SlidingUpPanel(
-        minHeight: 80, // 最小高度
-        // maxHeight: 1000 , // 完全体高度
-        backdropEnabled: true, // 遮罩层
+        minHeight: 60.h, // 最小高度
+        maxHeight: 1.sh, // 完全体高度
+        // backdropEnabled: true, // 遮罩层
         // backdropColor: Colors.red, // 遮罩层颜色
-        // renderPanelSheet: false,
+        renderPanelSheet: false,
         // parallaxOffset: 1.0, // 偏移量
         // isDraggable: true, // 是否可拖动
-        // collapsed: _floatingCollapsed(),
-        panel: _floatingPanel(),
+        collapsed: _collapsed(),
+        panel: _panel(),
         body: Scaffold(
-          appBar: AppBar(
-            title: Text("SlidingUpPanelExample"),
-          ),
-          body: Center(
-            child: _buildPageView(),
-          ),
+          appBar: _buildAppBar(),
+          body: _buildPageView(),
         ),
-        borderRadius: radius,
+        // borderRadius: radius,
         // margin: const EdgeInsets.all(24.0),
       ),
 
