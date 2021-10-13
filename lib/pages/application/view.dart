@@ -60,7 +60,7 @@ class ApplicationPage extends GetView<ApplicationController> {
       filter: ImageFilter.blur(sigmaX: singl, sigmaY: singl),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.black45,
+          color: Colors.black54,
           // borderRadius: BorderRadius.all(Radius.circular(0))
         ),
         child: SafeArea(
@@ -72,27 +72,31 @@ class ApplicationPage extends GetView<ApplicationController> {
 
   @override
   Widget build(BuildContext context) {
-    // BorderRadiusGeometry radius = BorderRadius.only(
-    //   topLeft: Radius.circular(24.0),
-    //   topRight: Radius.circular(24.0),
-    //   bottomLeft: Radius.circular(24.0),
-    //   bottomRight: Radius.circular(24.0),
-    // );
+    // 圆角
+    BorderRadiusGeometry radius = BorderRadius.only(
+      topLeft: Radius.circular(24.0),
+      topRight: Radius.circular(24.0),
+      bottomLeft: Radius.circular(24.0),
+      bottomRight: Radius.circular(24.0),
+    );
+
+    // 露出高度
+    const double _h = 60 ;
 
     // 面板内容
     // 总高度 == height = 5 + margin = 5 * 2 = 15
     Widget _panel() {
       return ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(25),
         child: _buildBlurUtils(
             Column(
               children: [
                 Container(
                   // margin: const EdgeInsets.fromLTRB(0, 5.0, 0, 5.0),
-                  width: 30.w,
+                  width: 1.sw,
                   height: 5.h,
                   decoration: BoxDecoration(
-                      color: Colors.yellow,
+                      // color: Colors.grey[200],
                       borderRadius: BorderRadius.all(Radius.circular(12.0))),
                 ),
                 Text(
@@ -105,9 +109,10 @@ class ApplicationPage extends GetView<ApplicationController> {
       );
     }
 
-    // 漏出来的部分
+    // 露出来的部分
     Widget _collapsed() {
-      return ClipRRect(
+      return Container(
+        child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
         child: Container(
           color: Colors.white,
@@ -116,7 +121,7 @@ class ApplicationPage extends GetView<ApplicationController> {
             style: TextStyle(color: Colors.white),
           ),
         ),
-      );
+      ),);
     }
 
     return Scaffold(
@@ -124,20 +129,24 @@ class ApplicationPage extends GetView<ApplicationController> {
       // body: _buildPageView(),
       // extendBody: true, // 这个属性是决定body的延伸到底部还是延伸到bottomnavigationbar
       body: SlidingUpPanel(
+        // border : Border(top: BorderSide(width: 10.h, color: Colors.black,)) ,
+        color :   Color(0x00) , // 主体颜色 === 透明了直接
+        // parallaxEnabled : true , // 开启滚动视差
+        // parallaxOffset: 1.0, // 偏移量
         minHeight: 60.h, // 最小高度
         maxHeight: 1.sh, // 完全体高度
         // backdropEnabled: true, // 遮罩层
+          // backdropOpacity : 0 ,
         // backdropColor: Colors.red, // 遮罩层颜色
-        renderPanelSheet: false,
-        // parallaxOffset: 1.0, // 偏移量
-        // isDraggable: true, // 是否可拖动
+        // renderPanelSheet: false,
+        // isDraggable: false, // 是否可拖动
         collapsed: _collapsed(),
         panel: _panel(),
         body: Scaffold(
           appBar: _buildAppBar(),
           body: _buildPageView(),
         ),
-        // borderRadius: radius,
+        borderRadius: radius,
         // margin: const EdgeInsets.all(24.0),
       ),
 
